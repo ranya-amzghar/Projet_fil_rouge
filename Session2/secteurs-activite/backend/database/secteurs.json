@@ -1,0 +1,22 @@
+[
+    {
+        "id": 2,
+        "nom": "Artisanat",
+        "description": "Métiers manuels et produits artisanaux traditionnels."
+    },
+    {
+        "id": 3,
+        "nom": "Technologies & Digital",
+        "description": "Développement logiciel, services numériques et innovation."
+    },
+    {
+        "id": 4,
+        "nom": "Automobile",
+        "description": "Constructeurs, équipementiers et services automobiles."
+    },
+    {
+        "id": 5,
+        "nom": "Immobilier",
+        "description": "Promotion immobilière, agences et services associés."
+    }
+]
