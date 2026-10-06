@@ -1,0 +1,23 @@
+usecase-beta
+    direction LR
+    actor Admin("Admin")
+    actor Exposant("Exposant")
+    actor Visiteur("Visiteur")
+    systemBoundary ""
+    A1("Gérer les secteurs d'activité")
+    A2("Gérer les événements")
+    A3("Gérer les exposants")
+    A4("Gérer les stands")
+    A5("Réserver un stand")
+    A6("Consulter son stand")
+    A8("Consulter les événements")
+    A9("Rechercher un exposant")
+    end
+    Admin --> A1
+    Admin --> A2
+    Admin --> A3
+    Admin --> A4
+    Exposant --> A5
+    Exposant --> A6
+    Visiteur --> A8
+    Visiteur --> A9
