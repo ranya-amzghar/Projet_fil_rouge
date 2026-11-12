@@ -36,27 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderRow(secteur) {
     const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50/80 transition duration-150';
+    tr.className = 'hover:bg-slate-50/70 transition-colors';
     tr.innerHTML = `
-      <td class="px-5 py-4 font-semibold text-slate-900">
-        <button type="button" class="row-details hover:text-indigo-600 font-bold transition text-left flex items-center gap-2.5" data-id="${secteur.id}">
-          <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold">#${secteur.id}</span>
-          <span>${escapeHtml(secteur.nom)}</span>
+      <td class="px-5 py-3.5">
+        <button type="button" class="row-details font-semibold text-slate-900 hover:text-blue-600 transition text-left flex items-center gap-2.5" data-id="${secteur.id}">
+          <span class="w-7 h-7 rounded-md bg-slate-100 text-slate-600 border border-slate-200 flex items-center justify-center text-xs font-mono font-medium">#${secteur.id}</span>
+          <span class="text-xs sm:text-sm font-semibold">${escapeHtml(secteur.nom)}</span>
         </button>
       </td>
-      <td class="px-5 py-4 text-slate-600 text-sm max-w-xs md:max-w-md truncate">
-        ${escapeHtml(secteur.description) || '<span class="text-slate-300 italic font-normal">Aucune description</span>'}
+      <td class="px-5 py-3.5 text-slate-600 text-xs sm:text-sm max-w-xs md:max-w-md truncate">
+        ${escapeHtml(secteur.description) || '<span class="italic text-slate-400">Aucune description</span>'}
       </td>
-      <td class="px-5 py-4 text-right whitespace-nowrap">
-        <div class="flex items-center justify-end gap-1.5">
-          <button type="button" class="row-details text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
-            Détails
+      <td class="px-5 py-3.5 text-right whitespace-nowrap">
+        <div class="flex items-center justify-end gap-1">
+          <button type="button" class="row-details p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" title="Détails" data-id="${secteur.id}">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
           </button>
-          <button type="button" class="row-edit text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
-            Modifier
+          <button type="button" class="row-edit p-1.5 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" title="Modifier" data-id="${secteur.id}">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
           </button>
-          <button type="button" class="row-delete text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
-            Supprimer
+          <button type="button" class="row-delete p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Supprimer" data-id="${secteur.id}">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </button>
         </div>
       </td>
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const secteurs = await SecteurApi.list();
 
       tableBody.innerHTML = '';
-      countLabel.textContent = `${secteurs.length} secteur${secteurs.length > 1 ? 's' : ''} répertorié${secteurs.length > 1 ? 's' : ''}`;
+      countLabel.textContent = `${secteurs.length} secteur${secteurs.length > 1 ? 's' : ''}`;
 
       if (secteurs.length === 0) {
         emptyState.classList.remove('hidden');
@@ -89,14 +89,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showAlert(type, message) {
     const isSuccess = type === 'success';
+    const icon = isSuccess
+      ? '<svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+      : '<svg class="w-4 h-4 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+
     alertBox.innerHTML = `
-      <span class="text-lg leading-none">${isSuccess ? '✓' : '⚠️'}</span>
-      <span>${escapeHtml(message)}</span>
+      <div class="shrink-0">${icon}</div>
+      <span class="flex-1">${escapeHtml(message)}</span>
+      <button onclick="this.parentElement.classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-sm leading-none ml-1">&times;</button>
     `;
-    alertBox.className = 'mb-6 rounded-xl border px-4 py-3.5 text-sm font-medium shadow-sm transition-all duration-200 flex items-center gap-3 ' +
+    alertBox.className = 'mb-6 rounded-xl border px-4 py-3 text-xs sm:text-sm font-medium shadow-subtle transition-all duration-200 flex items-center gap-2.5 ' +
       (isSuccess
-        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-        : 'bg-red-50 border-red-200 text-red-800');
+        ? 'bg-emerald-50/70 border-emerald-200/80 text-emerald-800'
+        : 'bg-rose-50/70 border-rose-200/80 text-rose-800');
     alertBox.classList.remove('hidden');
     window.clearTimeout(showAlert._timer);
     showAlert._timer = window.setTimeout(() => alertBox.classList.add('hidden'), 4000);
@@ -106,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function clearFormErrors() {
     [errorNom, errorDesc].forEach((el) => { el.classList.add('hidden'); el.textContent = ''; });
-    [inputNom, inputDesc].forEach((el) => el.classList.remove('border-red-500', 'ring-2', 'ring-red-200'));
+    [inputNom, inputDesc].forEach((el) => el.classList.remove('border-rose-400', 'ring-2', 'ring-rose-100'));
   }
 
   function showFormErrors(errors) {
@@ -114,12 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errors.nom) {
       errorNom.textContent = errors.nom;
       errorNom.classList.remove('hidden');
-      inputNom.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+      inputNom.classList.add('border-rose-400', 'ring-2', 'ring-rose-100');
     }
     if (errors.description) {
       errorDesc.textContent = errors.description;
       errorDesc.classList.remove('hidden');
-      inputDesc.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+      inputDesc.classList.add('border-rose-400', 'ring-2', 'ring-rose-100');
     }
   }
 

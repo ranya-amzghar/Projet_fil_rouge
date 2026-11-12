@@ -1,5 +1,5 @@
 /**
- * Salons & Foires — SPA (Événements + Secteurs)
+ * Salons & Foires — Console d'Administration
  * PHP REST API + JSON Storage backend
  */
 
@@ -40,22 +40,36 @@ function esc(str) {
 /** Format ISO date to dd/mm/yyyy */
 function fmtDate(dateStr) {
   if (!dateStr) return '—';
-  const [y, m, d] = dateStr.split('-');
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const [y, m, d] = parts;
   return `${d}/${m}/${y}`;
 }
 
 // ─── TOAST ──────────────────────────────────────────────────────────────────
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
-  const colors = {
-    success: 'bg-emerald-600',
-    error:   'bg-red-600',
-    info:    'bg-indigo-600',
-  };
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
   const toast = document.createElement('div');
-  toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-white text-sm font-semibold ${colors[type] || colors.info} toast-enter`;
-  toast.innerHTML = `<span class="text-base leading-none">${icons[type] || icons.info}</span><span class="flex-1">${esc(message)}</span>`;
+  
+  const borderColors = {
+    success: 'border-emerald-200 bg-white text-slate-800',
+    error:   'border-rose-200 bg-white text-slate-800',
+    info:    'border-sky-200 bg-white text-slate-800',
+  };
+
+  const icons = {
+    success: '<svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+    error:   '<svg class="w-4 h-4 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+    info:    '<svg class="w-4 h-4 text-sky-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
+  };
+
+  toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border ${borderColors[type] || borderColors.info} shadow-elevated text-xs sm:text-sm font-medium toast-enter`;
+  toast.innerHTML = `
+    <div class="pt-0.5">${icons[type] || icons.info}</div>
+    <div class="flex-1 leading-snug">${esc(message)}</div>
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 text-sm leading-none ml-1">&times;</button>
+  `;
+
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.remove('toast-enter');
@@ -69,14 +83,19 @@ const SECTIONS = ['evenements', 'secteurs'];
 
 function navigateTo(section) {
   SECTIONS.forEach(s => {
-    document.getElementById(`section-${s}`).hidden = s !== section;
+    const el = document.getElementById(`section-${s}`);
+    if (el) el.hidden = s !== section;
   });
+
   document.querySelectorAll('.nav-tab').forEach(btn => {
     const active = btn.dataset.nav === section;
-    btn.classList.toggle('bg-white/20', active);
-    btn.classList.toggle('text-white',  active);
-    btn.classList.toggle('text-slate-300', !active);
+    btn.classList.toggle('active', active);
+    if (!active) {
+      btn.classList.remove('bg-slate-900', 'text-white');
+      btn.classList.add('text-slate-600');
+    }
   });
+
   loadSection(section);
 }
 
@@ -137,33 +156,51 @@ document.getElementById('delete-confirm').addEventListener('click', async () => 
 // ─── BADGE HELPERS ──────────────────────────────────────────────────────────
 function statutEvBadge(statut) {
   const map = {
-    planifie: ['bg-sky-50 text-sky-700 border-sky-200',       'Planifié'],
-    en_cours: ['bg-amber-50 text-amber-700 border-amber-200', 'En cours'],
-    termine:  ['bg-slate-100 text-slate-600 border-slate-200','Terminé'],
-    annule:   ['bg-red-50 text-red-700 border-red-200',       'Annulé'],
+    planifie: {
+      bg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
+      dot: 'bg-emerald-500',
+      label: 'Planifié'
+    },
+    en_cours: {
+      bg: 'bg-amber-50 text-amber-700 border-amber-200/60',
+      dot: 'bg-amber-500',
+      label: 'En cours'
+    },
+    termine: {
+      bg: 'bg-slate-100 text-slate-600 border-slate-200',
+      dot: 'bg-slate-400',
+      label: 'Terminé'
+    },
+    annule: {
+      bg: 'bg-rose-50 text-rose-700 border-rose-200/60',
+      dot: 'bg-rose-500',
+      label: 'Annulé'
+    },
   };
-  const [cls, label] = map[statut] ?? ['bg-slate-100 text-slate-500 border-slate-200', statut];
-  return `<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full border ${cls}">${label}</span>`;
+  const cfg = map[statut] ?? { bg: 'bg-slate-100 text-slate-600 border-slate-200', dot: 'bg-slate-400', label: statut };
+  return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${cfg.bg}"><span class="w-1.5 h-1.5 rounded-full ${cfg.dot}"></span>${cfg.label}</span>`;
 }
 
 function typeBadge(type) {
-  const map = {
-    salon: ['bg-violet-50 text-violet-700 border-violet-200', '🎪 Salon'],
-    foire: ['bg-amber-50  text-amber-700  border-amber-200',  '🌟 Foire'],
-  };
-  const [cls, label] = map[type] ?? ['bg-slate-100 text-slate-500 border-slate-200', type];
-  return `<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full border ${cls}">${label}</span>`;
+  const isSalon = type === 'salon';
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${isSalon ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/60' : 'bg-purple-50 text-purple-700 border border-purple-200/60'}">${isSalon ? 'Salon' : 'Foire'}</span>`;
 }
 
-/** Shared action buttons column */
+/** Action buttons column with minimalist SVG icons */
 function actionBtns(entity, id) {
   return `<div class="flex items-center justify-end gap-1">
     <button onclick="showDetails('${entity}',${id})" title="Voir les détails"
-      class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition text-base" aria-label="Détails">👁</button>
+      class="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" aria-label="Détails">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+    </button>
     <button onclick="openEdit('${entity}',${id})" title="Modifier"
-      class="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition text-base" aria-label="Modifier">✏️</button>
+      class="p-1.5 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" aria-label="Modifier">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+    </button>
     <button onclick="deleteItem('${entity}',${id})" title="Supprimer"
-      class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition text-base" aria-label="Supprimer">🗑️</button>
+      class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" aria-label="Supprimer">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    </button>
   </div>`;
 }
 
@@ -194,13 +231,13 @@ function renderEvenements() {
     tableWrap.classList.remove('hidden');
     empty.classList.add('hidden');
     tbody.innerHTML = list.map(ev => `
-      <tr class="hover:bg-slate-50/60 transition group">
+      <tr class="hover:bg-slate-50/70 transition-colors">
         <td class="px-5 py-3.5">
-          <span class="font-semibold text-slate-800 text-sm group-hover:text-indigo-700 transition">${esc(ev.titre)}</span>
+          <span class="font-semibold text-slate-900">${esc(ev.titre)}</span>
         </td>
         <td class="px-5 py-3.5">${typeBadge(ev.type)}</td>
-        <td class="px-5 py-3.5 text-sm text-slate-600 whitespace-nowrap">${fmtDate(ev.date_debut)} → ${fmtDate(ev.date_fin)}</td>
-        <td class="px-5 py-3.5 text-sm text-slate-600">${esc(ev.lieu)}<span class="text-slate-400">, ${esc(ev.ville)}</span></td>
+        <td class="px-5 py-3.5 text-xs text-slate-600 whitespace-nowrap">${fmtDate(ev.date_debut)} → ${fmtDate(ev.date_fin)}</td>
+        <td class="px-5 py-3.5 text-xs text-slate-600">${esc(ev.lieu)}<span class="text-slate-400">, ${esc(ev.ville)}</span></td>
         <td class="px-5 py-3.5">${statutEvBadge(ev.statut)}</td>
         <td class="px-5 py-3.5">${actionBtns('evenements', ev.id)}</td>
       </tr>`).join('');
@@ -213,21 +250,21 @@ function evFormHTML(ev = null) {
   return `
     <form id="entity-form" class="space-y-4" novalidate>
       <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Titre <span class="text-red-500">*</span></label>
-        <input name="titre" value="${v('titre')}" placeholder="Ex : Salon du Digital 2026" maxlength="150"
-          class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Titre de l'événement <span class="text-rose-500">*</span></label>
+        <input name="titre" value="${v('titre')}" placeholder="Ex : Salon International des Technologies" maxlength="150" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Type <span class="text-red-500">*</span></label>
-          <select name="type" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
-            <option value="salon" ${sel('type','salon')}>🎪 Salon</option>
-            <option value="foire" ${sel('type','foire')}>🌟 Foire</option>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Type <span class="text-rose-500">*</span></label>
+          <select name="type" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+            <option value="salon" ${sel('type','salon')}>Salon</option>
+            <option value="foire" ${sel('type','foire')}>Foire</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Statut <span class="text-red-500">*</span></label>
-          <select name="statut" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Statut <span class="text-rose-500">*</span></label>
+          <select name="statut" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
             <option value="planifie" ${sel('statut','planifie')}>Planifié</option>
             <option value="en_cours" ${sel('statut','en_cours')}>En cours</option>
             <option value="termine"  ${sel('statut','termine')}>Terminé</option>
@@ -237,37 +274,37 @@ function evFormHTML(ev = null) {
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Date de début <span class="text-red-500">*</span></label>
-          <input name="date_debut" type="date" value="${v('date_debut')}"
-            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début <span class="text-rose-500">*</span></label>
+          <input name="date_debut" type="date" value="${v('date_debut')}" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Date de fin <span class="text-red-500">*</span></label>
-          <input name="date_fin" type="date" value="${v('date_fin')}"
-            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin <span class="text-rose-500">*</span></label>
+          <input name="date_fin" type="date" value="${v('date_fin')}" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Lieu <span class="text-red-500">*</span></label>
-          <input name="lieu" value="${v('lieu')}" placeholder="Ex : Palais des Congrès" maxlength="150"
-            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu <span class="text-rose-500">*</span></label>
+          <input name="lieu" value="${v('lieu')}" placeholder="Ex : Palais des Expositions" maxlength="150" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Ville <span class="text-red-500">*</span></label>
-          <input name="ville" value="${v('ville')}" placeholder="Ex : Tanger" maxlength="100"
-            class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Ville <span class="text-rose-500">*</span></label>
+          <input name="ville" value="${v('ville')}" placeholder="Ex : Casablanca" maxlength="100" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
         </div>
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Description</label>
-        <textarea name="description" rows="3" placeholder="Description de l'événement..."
-          class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition resize-none">${v('description')}</textarea>
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+        <textarea name="description" rows="3" placeholder="Informations complémentaires sur l'événement..."
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition resize-none">${v('description')}</textarea>
       </div>
-      <div class="flex gap-3 pt-1 border-t border-slate-100">
-        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
-        <button type="submit" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-sm font-semibold transition shadow-sm">
-          ${ev ? 'Enregistrer les modifications' : 'Ajouter l\'événement'}
+      <div class="flex gap-2.5 pt-3 border-t border-slate-200">
+        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition">
+          ${ev ? 'Enregistrer les modifications' : 'Créer l\'événement'}
         </button>
       </div>
     </form>`;
@@ -276,7 +313,7 @@ function evFormHTML(ev = null) {
 function evDetailsHTML(ev) {
   return `
     <div class="space-y-4">
-      <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+      <div class="flex items-center gap-2 pb-3 border-b border-slate-200">
         ${typeBadge(ev.type)} ${statutEvBadge(ev.statut)}
       </div>
       <div class="grid grid-cols-2 gap-3">
@@ -285,7 +322,7 @@ function evDetailsHTML(ev) {
         ${detailBlock('Lieu', esc(ev.lieu))}
         ${detailBlock('Ville', esc(ev.ville))}
       </div>
-      ${ev.description ? detailBlock('Description', `<p class="text-slate-700 text-sm leading-relaxed">${esc(ev.description)}</p>`) : ''}
+      ${ev.description ? detailBlock('Description', `<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">${esc(ev.description)}</p>`) : ''}
     </div>`;
 }
 
@@ -311,25 +348,25 @@ function renderSecteurs() {
     tableWrap.classList.remove('hidden');
     empty.classList.add('hidden');
     tbody.innerHTML = list.map(sec => `
-      <tr class="hover:bg-slate-50/60 transition group">
+      <tr class="hover:bg-slate-50/70 transition-colors">
         <td class="px-5 py-3.5 text-center">
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-2xl border border-slate-200/60 group-hover:scale-105 transition-transform">
-            ${esc(sec.icone)}
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-base border border-slate-200">
+            ${esc(sec.icone || '🏷️')}
           </span>
         </td>
         <td class="px-5 py-3.5">
-          <button onclick="showDetails('secteurs',${sec.id})" class="font-semibold text-slate-800 text-sm hover:text-indigo-700 transition text-left">
+          <button onclick="showDetails('secteurs',${sec.id})" class="font-semibold text-slate-900 text-xs sm:text-sm hover:text-blue-600 transition text-left">
             ${esc(sec.nom)}
           </button>
-          <div class="text-xs text-slate-400 font-mono">#${sec.id}</div>
+          <div class="text-[11px] text-slate-400 font-mono">ID: #${sec.id}</div>
         </td>
         <td class="px-5 py-3.5">
-          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80">
-            <span class="inline-block w-3.5 h-3.5 rounded-full border border-white shadow-sm" style="background:${esc(sec.couleur)}"></span>
-            <span class="font-mono text-xs text-slate-700 font-bold">${esc(sec.couleur)}</span>
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
+            <span class="inline-block w-3 h-3 rounded-full border border-white shadow-xs" style="background:${esc(sec.couleur)}"></span>
+            <span class="font-mono text-[11px] text-slate-600 font-bold">${esc(sec.couleur)}</span>
           </div>
         </td>
-        <td class="px-5 py-3.5 text-sm text-slate-600 max-w-xs">
+        <td class="px-5 py-3.5 text-xs text-slate-600 max-w-xs">
           <p class="truncate">${esc(sec.description) || '<span class="text-slate-400 italic">Aucune description</span>'}</p>
         </td>
         <td class="px-5 py-3.5">${actionBtns('secteurs', sec.id)}</td>
@@ -339,43 +376,42 @@ function renderSecteurs() {
 
 function secFormHTML(sec = null) {
   const v = f => esc(sec ? (sec[f] ?? '') : '');
-  const couleur = sec?.couleur ?? '#4f46e5';
+  const couleur = sec?.couleur ?? '#2563eb';
   return `
     <form id="entity-form" class="space-y-4" novalidate>
       <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Nom du secteur <span class="text-red-500">*</span></label>
-        <input name="nom" value="${v('nom')}" placeholder="Ex : Agroalimentaire, Artisanat..." maxlength="100"
-          class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Nom du secteur <span class="text-rose-500">*</span></label>
+        <input name="nom" value="${v('nom')}" placeholder="Ex : Agroalimentaire, Technologie..." maxlength="100" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Icône / Émoji <span class="text-red-500">*</span></label>
-          <input name="icone" value="${v('icone')}" placeholder="Ex : 🌾, 🏺, 💻" maxlength="10"
-            class="w-full px-3.5 py-2.5 text-sm text-center text-xl border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Icône / Émoji <span class="text-rose-500">*</span></label>
+          <input name="icone" value="${v('icone')}" placeholder="Ex : 💻" maxlength="10" required
+            class="w-full px-3 py-2 text-xs sm:text-sm text-center border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Couleur <span class="text-red-500">*</span></label>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Couleur <span class="text-rose-500">*</span></label>
           <div class="flex items-center gap-2">
             <input type="color" id="couleur-picker" value="${esc(couleur)}"
               oninput="document.querySelector('[name=couleur]').value=this.value; document.getElementById('couleur-hex').textContent=this.value"
-              class="h-11 w-14 p-1 border border-slate-300 rounded-xl cursor-pointer bg-white">
-            <div>
-              <input name="couleur" value="${esc(couleur)}" placeholder="#4f46e5" maxlength="7"
-                oninput="try{document.getElementById('couleur-picker').value=this.value}catch(e){}"
-                class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
-              <span id="couleur-hex" class="text-xs text-slate-400 ml-1">${esc(couleur)}</span>
+              class="h-9 w-10 p-0.5 border border-slate-200 rounded-lg cursor-pointer bg-white">
+            <div class="flex-1">
+              <input name="couleur" value="${esc(couleur)}" placeholder="#2563eb" maxlength="7" required
+                oninput="try{document.getElementById('couleur-picker').value=this.value; document.getElementById('couleur-hex').textContent=this.value}catch(e){}"
+                class="w-full px-2 py-1.5 text-xs font-mono border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
             </div>
           </div>
         </div>
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Description <span class="text-red-500">*</span></label>
-        <textarea name="description" rows="3" placeholder="Décrivez les activités principales de ce secteur..." maxlength="1000"
-          class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition resize-none">${v('description')}</textarea>
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Description <span class="text-rose-500">*</span></label>
+        <textarea name="description" rows="3" placeholder="Description des activités du secteur..." maxlength="1000" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition resize-none">${v('description')}</textarea>
       </div>
-      <div class="flex gap-3 pt-1 border-t border-slate-100">
-        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
-        <button type="submit" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-sm font-semibold transition shadow-sm">
+      <div class="flex gap-2.5 pt-3 border-t border-slate-200">
+        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition">
           ${sec ? 'Enregistrer les modifications' : 'Ajouter le secteur'}
         </button>
       </div>
@@ -384,26 +420,26 @@ function secFormHTML(sec = null) {
 
 function secDetailsHTML(sec) {
   return `
-    <div class="space-y-5">
-      <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
-        <span class="text-5xl p-2.5 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
-          ${esc(sec.icone)}
+    <div class="space-y-4">
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
+        <span class="text-3xl p-2 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
+          ${esc(sec.icone || '🏷️')}
         </span>
         <div>
-          <h3 class="font-bold text-slate-900 text-xl">${esc(sec.nom)}</h3>
-          <p class="text-xs text-slate-400 font-mono mt-0.5">Identifiant : #${sec.id}</p>
+          <h3 class="font-bold text-slate-900 text-base">${esc(sec.nom)}</h3>
+          <p class="text-[11px] text-slate-400 font-mono">Identifiant : #${sec.id}</p>
         </div>
       </div>
       <div>
-        <span class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Couleur associée</span>
-        <div class="flex items-center gap-2.5">
-          <span class="inline-block w-7 h-7 rounded-xl border border-slate-200 shadow-sm" style="background:${esc(sec.couleur)}"></span>
-          <code class="font-mono text-slate-700 font-semibold text-sm">${esc(sec.couleur)}</code>
+        <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Couleur associée</span>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-5 rounded-md border border-slate-200 shadow-xs" style="background:${esc(sec.couleur)}"></span>
+          <code class="font-mono text-slate-700 font-semibold text-xs">${esc(sec.couleur)}</code>
         </div>
       </div>
       <div>
-        <span class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Description</span>
-        <p class="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200/80 text-sm">${esc(sec.description) || '<span class="italic text-slate-400">Aucune description</span>'}</p>
+        <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Description</span>
+        <p class="text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs sm:text-sm leading-relaxed">${esc(sec.description) || '<span class="italic text-slate-400">Aucune description</span>'}</p>
       </div>
     </div>`;
 }
@@ -486,9 +522,9 @@ function deleteItem(entity, id) {
 // ─── DETAIL BLOCK HELPER ────────────────────────────────────────────────────
 function detailBlock(label, valueHTML) {
   return `
-    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-      <span class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">${label}</span>
-      <div class="text-sm font-semibold text-slate-800">${valueHTML || '—'}</div>
+    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+      <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5">${label}</span>
+      <div class="text-xs sm:text-sm font-semibold text-slate-800">${valueHTML || '—'}</div>
     </div>`;
 }
 
