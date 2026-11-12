@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "titre": "Salon International de l'Artisanat",
+        "type": "salon",
+        "description": "Rencontre annuelle des artisans et des acheteurs professionnels.",
+        "date_debut": "2026-11-12",
+        "date_fin": "2026-11-15",
+        "lieu": "Palais des Congrès",
+        "ville": "Tanger",
+        "statut": "planifie"
+    },
+    {
+        "id": 2,
+        "titre": "Foire Régionale de l'Agroalimentaire",
+        "type": "foire",
+        "description": "Producteurs locaux, coopératives et distributeurs.",
+        "date_debut": "2026-10-02",
+        "date_fin": "2026-10-05",
+        "lieu": "Parc des Expositions",
+        "ville": "Tétouan",
+        "statut": "planifie"
+    },
+    {
+        "id": 3,
+        "titre": "Salon du Digital",
+        "type": "salon",
+        "description": "Agences, startups et solutions numériques.",
+        "date_debut": "2026-05-20",
+        "date_fin": "2026-05-22",
+        "lieu": "Technopark",
+        "ville": "Tanger",
+        "statut": "termine"
+    }
+]

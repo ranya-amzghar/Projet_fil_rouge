@@ -1,5 +1,12 @@
 [
     {
+        "id": 1,
+        "nom": "Agroalimentaire",
+        "icone": "🌾",
+        "couleur": "#16a34a",
+        "description": "Produits agricoles, coopératives, transformation alimentaire et distribution."
+    },
+    {
         "id": 2,
         "nom": "Artisanat",
         "icone": "🏺",

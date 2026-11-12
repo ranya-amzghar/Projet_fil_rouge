@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "numero": "A1",
+        "superficie": 12.0,
+        "prix": 4500.0,
+        "statut": "occupe",
+        "evenement_id": 2,
+        "exposant_id": 1
+    },
+    {
+        "id": 2,
+        "numero": "A2",
+        "superficie": 9.0,
+        "prix": 3500.0,
+        "statut": "disponible",
+        "evenement_id": 2,
+        "exposant_id": null
+    },
+    {
+        "id": 3,
+        "numero": "B1",
+        "superficie": 15.0,
+        "prix": 6000.0,
+        "statut": "occupe",
+        "evenement_id": 3,
+        "exposant_id": 2
+    }
+]

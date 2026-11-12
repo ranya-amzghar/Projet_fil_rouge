@@ -36,18 +36,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderRow(secteur) {
     const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50';
+    tr.className = 'hover:bg-slate-50/80 transition duration-150';
     tr.innerHTML = `
-      <td class="px-4 py-3 font-semibold">
-        <button class="row-details hover:text-brand hover:underline text-left" data-id="${secteur.id}">
-          ${escapeHtml(secteur.nom)}
+      <td class="px-5 py-4 font-semibold text-slate-900">
+        <button type="button" class="row-details hover:text-indigo-600 font-bold transition text-left flex items-center gap-2.5" data-id="${secteur.id}">
+          <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold">#${secteur.id}</span>
+          <span>${escapeHtml(secteur.nom)}</span>
         </button>
       </td>
-      <td class="px-4 py-3 text-slate-600 max-w-xs truncate">${escapeHtml(secteur.description) || '<span class="text-slate-400">—</span>'}</td>
-      <td class="px-4 py-3">
-        <div class="flex justify-end gap-2">
-          <button class="row-edit text-sm font-semibold text-slate-600 hover:text-brand px-2 py-1 rounded-md hover:bg-slate-100" data-id="${secteur.id}">Modifier</button>
-          <button class="row-delete text-sm font-semibold text-red-600 hover:text-white hover:bg-red-600 px-2 py-1 rounded-md transition" data-id="${secteur.id}">Supprimer</button>
+      <td class="px-5 py-4 text-slate-600 text-sm max-w-xs md:max-w-md truncate">
+        ${escapeHtml(secteur.description) || '<span class="text-slate-300 italic font-normal">Aucune description</span>'}
+      </td>
+      <td class="px-5 py-4 text-right whitespace-nowrap">
+        <div class="flex items-center justify-end gap-1.5">
+          <button type="button" class="row-details text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
+            Détails
+          </button>
+          <button type="button" class="row-edit text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
+            Modifier
+          </button>
+          <button type="button" class="row-delete text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg transition" data-id="${secteur.id}">
+            Supprimer
+          </button>
         </div>
       </td>
     `;
@@ -59,16 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const secteurs = await SecteurApi.list();
 
       tableBody.innerHTML = '';
-      countLabel.textContent = `${secteurs.length} secteur${secteurs.length > 1 ? 's' : ''} d'activité`;
+      countLabel.textContent = `${secteurs.length} secteur${secteurs.length > 1 ? 's' : ''} répertorié${secteurs.length > 1 ? 's' : ''}`;
 
       if (secteurs.length === 0) {
         emptyState.classList.remove('hidden');
-        tableBody.closest('.overflow-x-auto').classList.add('hidden');
+        tableBody.closest('.overflow-hidden').classList.add('hidden');
         return;
       }
 
       emptyState.classList.add('hidden');
-      tableBody.closest('.overflow-x-auto').classList.remove('hidden');
+      tableBody.closest('.overflow-hidden').classList.remove('hidden');
       secteurs.forEach((secteur) => tableBody.appendChild(renderRow(secteur)));
     } catch (err) {
       showAlert('error', "Impossible de charger les secteurs : " + err.message);
@@ -78,11 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Alertes ---------- */
 
   function showAlert(type, message) {
-    alertBox.textContent = message;
-    alertBox.className = 'mb-4 rounded-lg border px-4 py-3 text-sm ' +
-      (type === 'success'
-        ? 'bg-green-50 border-green-200 text-green-700'
-        : 'bg-red-50 border-red-200 text-red-700');
+    const isSuccess = type === 'success';
+    alertBox.innerHTML = `
+      <span class="text-lg leading-none">${isSuccess ? '✓' : '⚠️'}</span>
+      <span>${escapeHtml(message)}</span>
+    `;
+    alertBox.className = 'mb-6 rounded-xl border px-4 py-3.5 text-sm font-medium shadow-sm transition-all duration-200 flex items-center gap-3 ' +
+      (isSuccess
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-red-50 border-red-200 text-red-800');
     alertBox.classList.remove('hidden');
     window.clearTimeout(showAlert._timer);
     showAlert._timer = window.setTimeout(() => alertBox.classList.add('hidden'), 4000);
@@ -92,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function clearFormErrors() {
     [errorNom, errorDesc].forEach((el) => { el.classList.add('hidden'); el.textContent = ''; });
-    [inputNom, inputDesc].forEach((el) => el.classList.remove('border-red-500'));
+    [inputNom, inputDesc].forEach((el) => el.classList.remove('border-red-500', 'ring-2', 'ring-red-200'));
   }
 
   function showFormErrors(errors) {
@@ -100,12 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errors.nom) {
       errorNom.textContent = errors.nom;
       errorNom.classList.remove('hidden');
-      inputNom.classList.add('border-red-500');
+      inputNom.classList.add('border-red-500', 'ring-2', 'ring-red-200');
     }
     if (errors.description) {
       errorDesc.textContent = errors.description;
       errorDesc.classList.remove('hidden');
-      inputDesc.classList.add('border-red-500');
+      inputDesc.classList.add('border-red-500', 'ring-2', 'ring-red-200');
     }
   }
 
@@ -114,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputNom.value = '';
     inputDesc.value = '';
     clearFormErrors();
-    formTitle.textContent = 'Ajouter un secteur';
+    formTitle.textContent = 'Nouveau secteur';
     btnSubmit.textContent = 'Ajouter';
     formModal.classList.remove('hidden');
     inputNom.focus();
@@ -175,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const secteur = await SecteurApi.get(id);
       detailsNom.textContent = secteur.nom;
-      detailsId.textContent = `Secteur #${secteur.id}`;
-      detailsDesc.textContent = secteur.description || 'Aucune description.';
+      detailsId.textContent = `Identifiant système : #${secteur.id}`;
+      detailsDesc.textContent = secteur.description || 'Aucune description fournie pour ce secteur.';
       detailsModal.classList.remove('hidden');
     } catch (err) {
       showAlert('error', err.message);
@@ -211,10 +225,15 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Écouteurs globaux ---------- */
 
   document.getElementById('btn-add').addEventListener('click', openCreateModal);
-  document.querySelector('.btn-add-empty').addEventListener('click', openCreateModal);
+  const emptyAddBtn = document.querySelector('.btn-add-empty');
+  if (emptyAddBtn) emptyAddBtn.addEventListener('click', openCreateModal);
+
   document.getElementById('btn-cancel').addEventListener('click', closeFormModal);
   document.getElementById('btn-close-details').addEventListener('click', () => detailsModal.classList.add('hidden'));
   document.getElementById('btn-cancel-delete').addEventListener('click', closeConfirmModal);
+
+  const closeBtns = document.querySelectorAll('.btn-close-modal');
+  closeBtns.forEach((b) => b.addEventListener('click', closeFormModal));
 
   tableBody.addEventListener('click', (event) => {
     const editBtn = event.target.closest('.row-edit');
@@ -222,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailsBtn = event.target.closest('.row-details');
 
     if (editBtn) openEditModal(editBtn.dataset.id);
-    if (deleteBtn) openConfirmModal(deleteBtn.dataset.id);
-    if (detailsBtn) openDetailsModal(detailsBtn.dataset.id);
+    else if (deleteBtn) openConfirmModal(deleteBtn.dataset.id);
+    else if (detailsBtn) openDetailsModal(detailsBtn.dataset.id);
   });
 
   [formModal, detailsModal, confirmModal].forEach((modal) => {
