@@ -1,0 +1,30 @@
+[
+    {
+        "id": 2,
+        "nom": "Artisanat",
+        "icone": "🏺",
+        "couleur": "#c2410c",
+        "description": "Métiers manuels d'art, poterie, maroquinerie, tissage et traditions régionales."
+    },
+    {
+        "id": 3,
+        "nom": "Technologies & Digital",
+        "icone": "💻",
+        "couleur": "#2563eb",
+        "description": "Solutions logicielles, intelligence artificielle, cybersécurité et transformation numérique."
+    },
+    {
+        "id": 4,
+        "nom": "Automobile & Mobilité",
+        "icone": "🚗",
+        "couleur": "#4f46e5",
+        "description": "Constructeurs, véhicules électriques, équipementiers et mobilités urbaines."
+    },
+    {
+        "id": 5,
+        "nom": "Immobilier & BTP",
+        "icone": "🏢",
+        "couleur": "#0d9488",
+        "description": "Promotion immobilière, architecture, écoconstruction et travaux publics."
+    }
+]
