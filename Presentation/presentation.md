@@ -71,8 +71,8 @@ style: |
   <img src="solicode.png" alt="Logo SOLICODE" />
 </div>
 
-Aymane salmoune  
-encadrant : Fouad ESSARAJ
+Ranya Amzghar  
+encadrant : Fouad ES-SARAJ
 
 ---
 
@@ -88,16 +88,9 @@ encadrant : Fouad ESSARAJ
 
 ---
 
-## Objectif de formation (Solicode)
-
----
-
-## Cahier des charges
-
----
 <!-- _class: image-only -->
 
-## Scrum
+## Method: Scrum
 
 ![Méthode Scrum](../rapport/SCRUM/scrum.png)
 
