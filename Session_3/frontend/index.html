@@ -1,199 +1,218 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secteurs d'activité · Salons &amp; Foires</title>
+    <title>Secteurs d'activité · Console d'Administration</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace'],
             },
-            colors: {
-              brand: {
-                DEFAULT: '#4f46e5',
-                dark: '#4338ca',
-                light: '#eef2ff',
-              },
-              nav: '#0f172a',
-            },
+            boxShadow: {
+              subtle: '0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 1px 3px 0 rgba(15, 23, 42, 0.02)',
+              card: '0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 10px 25px -5px rgba(15, 23, 42, 0.04)',
+              modal: '0 25px 50px -12px rgba(15, 23, 42, 0.25)',
+            }
           },
         },
       };
     </script>
     <style>
-      body { font-family: 'Plus Jakarta Sans', sans-serif; }
-      [hidden] {
-        display: none !important;
+      body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+      [hidden] { display: none !important; }
+      .toast-enter { animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      @keyframes toastIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 font-sans antialiased overflow-x-hidden">
-    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
+<body class="min-h-full bg-slate-50 text-slate-800 antialiased flex flex-col">
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none w-88 max-w-[calc(100vw-2.5rem)]"></div>
 
-    <!-- Navigation haute -->
-    <header class="bg-nav text-white px-4 sm:px-8 py-3.5 shadow-md flex items-center justify-between sticky top-0 z-30">
+    <!-- Top Executive Header -->
+    <header class="bg-slate-950 text-white border-b border-slate-800/80 sticky top-0 z-30 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-            <span class="text-2xl">🎪</span>
-            <span class="font-extrabold text-lg tracking-tight">Salons <span class="text-indigo-400">&amp;</span> Foires</span>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 font-extrabold text-sm shadow-sm ring-1 ring-white/20">
+            SF
+          </div>
+          <div>
+            <div class="font-bold text-sm tracking-tight text-white flex items-center gap-2">
+              <span>Salons &amp; Foires</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold">Session 3</span>
+            </div>
+            <div class="text-[11px] font-medium text-slate-400">Architecture OOP &bull; Service / DAO</div>
+          </div>
         </div>
-        <nav class="flex items-center gap-2">
-            <span class="px-3 py-1.5 rounded-lg bg-white/10 text-xs sm:text-sm font-semibold tracking-wide text-slate-200">
-                Secteurs d'activité
-            </span>
-        </nav>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>API JSON</span>
+          </span>
+        </div>
+      </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-10 overflow-hidden">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-7 max-w-full overflow-hidden">
-            
-            <!-- En-tête de page -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
-                <div>
-                    <div class="flex items-center gap-3">
-                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Secteurs d'activité</h1>
-                        <span id="badge-count" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60">
-                            Chargement...
-                        </span>
-                    </div>
-                    <p class="text-slate-500 text-sm mt-1">Gestion et organisation des domaines d'exposition des salons et foires</p>
+    <main class="max-w-6xl w-full mx-auto px-4 sm:px-8 py-8 sm:py-10 flex-1">
+        
+        <!-- Header & Action Row -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Secteurs d'activité</h1>
+                    <span id="badge-count" class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-slate-900 text-white shadow-xs">
+                        Chargement...
+                    </span>
                 </div>
-                <button id="showForm" type="button" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-sm hover:shadow hover:-translate-y-0.5 text-sm">
-                    <span class="text-base leading-none font-bold">+</span>
-                    <span>Ajouter un secteur</span>
+                <p class="text-slate-500 text-sm mt-1">Domaines d'exposition, métiers et filières professionnelles</p>
+            </div>
+            <button id="showForm" type="button" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition shadow-sm hover:shadow active:scale-[0.98] text-sm shrink-0">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                <span>Ajouter un secteur</span>
+            </button>
+        </div>
+
+        <!-- Toolbar (Search & Info) -->
+        <div class="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/80 shadow-subtle mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+                <div class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-slate-400">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input id="search-input" type="search" placeholder="Rechercher par nom, mot-clé ou couleur..."
+                    class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition">
+            </div>
+            <div class="text-xs text-slate-400 font-medium self-end sm:self-center flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                <span>Filtre dynamique instantané</span>
+            </div>
+        </div>
+
+        <!-- Formulaire partagé Création / Modification -->
+        <form id="form" hidden class="mb-8 p-6 sm:p-7 bg-white border border-slate-200/90 rounded-2xl shadow-card grid gap-5 md:grid-cols-2 transition-all">
+            <div class="md:col-span-2 flex items-center justify-between pb-3.5 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-bold">✨</div>
+                  <h2 id="formTitle" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Nouveau secteur</h2>
+                </div>
+                <span class="text-xs text-slate-400 font-medium">* Champs obligatoires</span>
+            </div>
+            <input type="hidden" id="secteurId">
+
+            <div class="md:col-span-1">
+                <label for="nom" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Intitulé du secteur <span class="text-rose-500">*</span></label>
+                <input type="text" id="nom" placeholder="Ex : Agroalimentaire, Artisanat..." required maxlength="100"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:bg-white focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 outline-none transition font-medium">
+            </div>
+
+            <div class="md:col-span-1 grid grid-cols-2 gap-3">
+                <div>
+                    <label for="icone" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Icône / Émoji <span class="text-rose-500">*</span></label>
+                    <input type="text" id="icone" placeholder="🌾" required maxlength="20"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-center text-xl focus:bg-white focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 outline-none transition font-medium">
+                </div>
+                <div>
+                    <label for="couleur" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Couleur <span class="text-rose-500">*</span></label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="couleur" value="#0f172a"
+                            class="h-10 w-12 p-1 border border-slate-200 rounded-xl cursor-pointer bg-white">
+                        <span id="couleurHex" class="text-xs text-slate-700 font-mono font-bold">#0f172a</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <label for="description" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Description détaillée <span class="text-rose-500">*</span></label>
+                <textarea id="description" placeholder="Présentez les types de produits, métiers ou filières couverts par ce secteur..." required rows="3" maxlength="1000"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:bg-white focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 outline-none transition resize-none leading-relaxed"></textarea>
+            </div>
+
+            <div class="md:col-span-2 flex items-center gap-3 pt-3 border-t border-slate-100">
+                <button type="button" id="annuler" class="px-5 py-2.5 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    Annuler
+                </button>
+                <button type="submit" id="ajouter" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition shadow-sm hover:shadow active:scale-[0.98]">
+                    Enregistrer
                 </button>
             </div>
+        </form>
 
-            <!-- Barre de filtre & recherche -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
-                <div class="relative flex-1 max-w-md">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </span>
-                    <input id="search-input" type="search" placeholder="Rechercher par nom ou mot-clé..."
-                        class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition shadow-xs">
-                </div>
-                <div class="text-xs text-slate-500 self-end sm:self-center font-medium">
-                    Affichage responsive dynamique
+        <!-- Conteneur des données -->
+        <div id="data-container" class="w-full space-y-4">
+            
+            <div class="w-full overflow-hidden rounded-2xl border border-slate-200/80 shadow-card bg-white">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[680px]">
+                        <thead class="bg-slate-50/80 text-slate-400 font-bold text-[11px] uppercase tracking-wider border-b border-slate-200/80">
+                            <tr>
+                                <th class="py-3.5 pl-6 pr-3 w-16 text-center">Icône</th>
+                                <th class="px-4 py-3.5">Nom du secteur</th>
+                                <th class="px-4 py-3.5">Couleur</th>
+                                <th class="px-4 py-3.5 min-w-[260px]">Description</th>
+                                <th class="py-3.5 pl-3 pr-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_body" class="divide-y divide-slate-100 bg-white">
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center text-slate-400">Chargement des secteurs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Formulaire partagé Création / Modification -->
-            <form id="form" hidden class="mb-8 p-6 sm:p-7 bg-slate-50/90 border border-slate-200 rounded-2xl grid gap-5 md:grid-cols-2 shadow-xs transition-all">
-                <div class="md:col-span-2 flex items-center justify-between pb-3 border-b border-slate-200/80">
-                    <h2 id="formTitle" class="text-lg font-bold text-slate-900">Nouveau secteur</h2>
-                    <span class="text-xs text-slate-400 font-medium">* Champs obligatoires</span>
+            <!-- État vide -->
+            <div id="empty-state" class="hidden text-center py-16 px-4 border border-dashed border-slate-300 rounded-2xl bg-white shadow-subtle">
+                <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl text-slate-400">
+                    🔍
                 </div>
-                <input type="hidden" id="secteurId">
-
-                <div class="md:col-span-1">
-                    <label for="nom" class="block text-sm font-semibold text-slate-700 mb-1.5">Nom du secteur <span class="text-red-500">*</span></label>
-                    <input type="text" id="nom" placeholder="Ex : Agroalimentaire, Artisanat..." required maxlength="100"
-                        class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none transition bg-white shadow-xs">
-                </div>
-
-                <div class="md:col-span-1 grid grid-cols-2 gap-3">
-                    <div>
-                        <label for="icone" class="block text-sm font-semibold text-slate-700 mb-1.5">Icône / Émoji <span class="text-red-500">*</span></label>
-                        <input type="text" id="icone" placeholder="Ex : 🌾, 🏺, 💻" required maxlength="20"
-                            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-center text-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none transition bg-white shadow-xs">
-                    </div>
-                    <div>
-                        <label for="couleur" class="block text-sm font-semibold text-slate-700 mb-1.5">Couleur <span class="text-red-500">*</span></label>
-                        <div class="flex items-center gap-2">
-                            <input type="color" id="couleur" value="#4f46e5"
-                                class="h-10.5 w-14 p-1 border border-slate-300 rounded-xl cursor-pointer bg-white shadow-xs">
-                            <span id="couleurHex" class="text-xs text-slate-600 font-mono font-bold">#4f46e5</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-semibold text-slate-700 mb-1.5">Description <span class="text-red-500">*</span></label>
-                    <textarea id="description" placeholder="Présentez les types de produits, métiers ou entreprises couverts par ce secteur..." required rows="3" maxlength="1000"
-                        class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none transition bg-white shadow-xs"></textarea>
-                </div>
-
-                <div class="md:col-span-2 flex items-center gap-3 pt-2 border-t border-slate-200/80">
-                    <button type="submit" id="ajouter" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-sm text-sm">
-                        Enregistrer
-                    </button>
-                    <button type="button" id="annuler" class="bg-slate-200/80 hover:bg-slate-300 text-slate-700 font-semibold px-5 py-2.5 rounded-xl transition text-sm">
-                        Annuler
-                    </button>
-                </div>
-            </form>
-
-            <!-- CONTENEUR DU TABLEAU MODERNE & RESPONSIVE -->
-            <div id="data-container" class="w-full">
-                
-                <div class="w-full overflow-hidden rounded-2xl border border-slate-200 shadow-xs bg-white">
-                    <div class="w-full overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[680px]">
-                            <thead class="bg-slate-50/90 text-slate-600 font-bold text-xs uppercase tracking-wider border-b border-slate-200">
-                                <tr>
-                                    <th class="py-3.5 pl-6 pr-3 w-16 text-center">Icône</th>
-                                    <th class="px-4 py-3.5 whitespace-nowrap">Nom du secteur</th>
-                                    <th class="px-4 py-3.5 whitespace-nowrap">Couleur</th>
-                                    <th class="px-4 py-3.5 min-w-[260px]">Description</th>
-                                    <th class="py-3.5 pl-3 pr-6 text-right whitespace-nowrap">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table_body" class="divide-y divide-slate-100 bg-white">
-                                <tr>
-                                    <td colspan="5" class="px-6 py-12 text-center text-slate-400">Chargement des secteurs...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- État vide partagé -->
-                <div id="empty-state" class="hidden text-center py-14 px-4 border border-dashed border-slate-200 rounded-2xl bg-slate-50/50 mt-4">
-                    <span class="text-4xl block mb-2">🔍</span>
-                    <h3 class="font-bold text-slate-700 text-base mb-1">Aucun secteur trouvé</h3>
-                    <p class="text-slate-500 text-sm max-w-sm mx-auto mb-4">Modifiez votre recherche ou ajoutez un nouveau secteur d'activité.</p>
-                </div>
-
+                <h3 class="font-bold text-slate-800 text-base mb-1">Aucun secteur trouvé</h3>
+                <p class="text-slate-500 text-sm max-w-sm mx-auto">Modifiez votre recherche ou ajoutez un nouveau secteur d'activité.</p>
             </div>
 
         </div>
     </main>
 
     <!-- Modale Détails -->
-    <div id="detailsModal" hidden class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-40">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-lg border border-slate-100 transform transition-all">
+    <div id="detailsModal" hidden class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-40">
+        <div class="bg-white rounded-3xl shadow-modal p-6 sm:p-7 w-full max-w-md border border-slate-200/90 transform transition-all">
             <div class="flex items-center gap-4 mb-5 pb-4 border-b border-slate-100">
-                <span id="d_icone" class="text-4xl p-2.5 rounded-2xl bg-indigo-50/80 border border-indigo-100/80 flex items-center justify-center shadow-xs"></span>
+                <span id="d_icone" class="text-3xl p-3 rounded-2xl bg-slate-100 border border-slate-200/80 flex items-center justify-center shadow-xs"></span>
                 <div>
-                    <h2 id="d_nom" class="text-xl font-bold text-slate-900"></h2>
-                    <p class="text-xs text-slate-400 font-medium mt-0.5">Identifiant : <span id="d_id"></span></p>
+                    <h2 id="d_nom" class="text-lg font-bold text-slate-900 tracking-tight"></h2>
+                    <p class="text-xs text-slate-400 font-mono mt-0.5">Identifiant : #<span id="d_id"></span></p>
                 </div>
             </div>
 
-            <div class="space-y-4 text-sm">
-                <div>
-                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Couleur associée</span>
-                    <div class="flex items-center gap-2.5">
-                        <span id="d_couleur_box" class="inline-block w-7 h-7 rounded-xl border border-slate-200 shadow-xs"></span>
-                        <span id="d_couleur" class="font-mono text-slate-700 font-semibold"></span>
+            <div class="space-y-3.5 text-xs sm:text-sm">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Couleur associée</span>
+                    <div class="flex items-center gap-2">
+                        <span id="d_couleur_box" class="w-4 h-4 rounded-full border border-white shadow-xs"></span>
+                        <span id="d_couleur" class="font-mono text-slate-800 font-bold"></span>
                     </div>
                 </div>
 
-                <div>
-                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Description</span>
-                    <p id="d_description" class="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200/80"></p>
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Description complète</span>
+                    <p id="d_description" class="text-slate-700 leading-relaxed"></p>
                 </div>
             </div>
 
             <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
-                <button id="fermerDetails" type="button" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm">
+                <button id="fermerDetails" type="button" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold transition text-xs sm:text-sm shadow-xs">
                     Fermer
                 </button>
             </div>
