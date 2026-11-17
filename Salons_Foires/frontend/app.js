@@ -1,7 +1,11 @@
 /**
  * Salons & Foires — Console d'Administration
+<<<<<<< HEAD
  * Frontend SPA (Événements & Secteurs d'activité)
  * REST API Backend avec stockage JSON
+=======
+ * PHP REST API + JSON Storage backend
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
  */
 
 'use strict';
@@ -52,12 +56,18 @@ function fmtDate(dateStr) {
   if (!dateStr) return '—';
   const parts = dateStr.split('-');
   if (parts.length !== 3) return dateStr;
+<<<<<<< HEAD
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
+=======
+  const [y, m, d] = parts;
+  return `${d}/${m}/${y}`;
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
 }
 
 // ─── TOAST NOTIFICATIONS ────────────────────────────────────────────────────
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
+<<<<<<< HEAD
   if (!container) return;
 
   const styles = {
@@ -95,6 +105,27 @@ function showToast(message, type = 'success') {
     <button type="button" class="text-slate-400 hover:text-white p-1 rounded-lg transition" onclick="this.closest('.toast-enter').remove()">
       &times;
     </button>
+=======
+  const toast = document.createElement('div');
+  
+  const borderColors = {
+    success: 'border-emerald-200 bg-white text-slate-800',
+    error:   'border-rose-200 bg-white text-slate-800',
+    info:    'border-sky-200 bg-white text-slate-800',
+  };
+
+  const icons = {
+    success: '<svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+    error:   '<svg class="w-4 h-4 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+    info:    '<svg class="w-4 h-4 text-sky-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
+  };
+
+  toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border ${borderColors[type] || borderColors.info} shadow-elevated text-xs sm:text-sm font-medium toast-enter`;
+  toast.innerHTML = `
+    <div class="pt-0.5">${icons[type] || icons.info}</div>
+    <div class="flex-1 leading-snug">${esc(message)}</div>
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 text-sm leading-none ml-1">&times;</button>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
   `;
 
   container.appendChild(toast);
@@ -116,6 +147,7 @@ function navigateTo(section) {
   // Affichage de la section
   SECTIONS.forEach(s => {
     const el = document.getElementById(`section-${s}`);
+<<<<<<< HEAD
     if (el) el.hidden = (s !== section);
   });
 
@@ -150,6 +182,20 @@ function navigateTo(section) {
   closeMobileSidebar();
 
   // Chargement des données
+=======
+    if (el) el.hidden = s !== section;
+  });
+
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    const active = btn.dataset.nav === section;
+    btn.classList.toggle('active', active);
+    if (!active) {
+      btn.classList.remove('bg-slate-900', 'text-white');
+      btn.classList.add('text-slate-600');
+    }
+  });
+
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
   loadSection(section);
 }
 
@@ -275,6 +321,7 @@ if (deleteConfirm) {
 function statutEvBadge(statut) {
   const map = {
     planifie: {
+<<<<<<< HEAD
       pill: 'bg-sky-50 text-sky-700 border-sky-200/80',
       dot: 'bg-sky-500',
       label: 'Planifié',
@@ -342,6 +389,53 @@ function actionBtns(entity, id) {
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
       </button>
     </div>`;
+=======
+      bg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
+      dot: 'bg-emerald-500',
+      label: 'Planifié'
+    },
+    en_cours: {
+      bg: 'bg-amber-50 text-amber-700 border-amber-200/60',
+      dot: 'bg-amber-500',
+      label: 'En cours'
+    },
+    termine: {
+      bg: 'bg-slate-100 text-slate-600 border-slate-200',
+      dot: 'bg-slate-400',
+      label: 'Terminé'
+    },
+    annule: {
+      bg: 'bg-rose-50 text-rose-700 border-rose-200/60',
+      dot: 'bg-rose-500',
+      label: 'Annulé'
+    },
+  };
+  const cfg = map[statut] ?? { bg: 'bg-slate-100 text-slate-600 border-slate-200', dot: 'bg-slate-400', label: statut };
+  return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${cfg.bg}"><span class="w-1.5 h-1.5 rounded-full ${cfg.dot}"></span>${cfg.label}</span>`;
+}
+
+function typeBadge(type) {
+  const isSalon = type === 'salon';
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${isSalon ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/60' : 'bg-purple-50 text-purple-700 border border-purple-200/60'}">${isSalon ? 'Salon' : 'Foire'}</span>`;
+}
+
+/** Action buttons column with minimalist SVG icons */
+function actionBtns(entity, id) {
+  return `<div class="flex items-center justify-end gap-1">
+    <button onclick="showDetails('${entity}',${id})" title="Voir les détails"
+      class="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" aria-label="Détails">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+    </button>
+    <button onclick="openEdit('${entity}',${id})" title="Modifier"
+      class="p-1.5 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" aria-label="Modifier">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+    </button>
+    <button onclick="deleteItem('${entity}',${id})" title="Supprimer"
+      class="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" aria-label="Supprimer">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    </button>
+  </div>`;
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
 }
 
 // ─── SECTION ÉVÉNEMENTS ──────────────────────────────────────────────────────
@@ -425,6 +519,7 @@ function renderEvenements() {
     if (tableWrap) tableWrap.classList.add('hidden');
     if (empty) empty.classList.remove('hidden');
   } else {
+<<<<<<< HEAD
     if (tableWrap) tableWrap.classList.remove('hidden');
     if (empty) empty.classList.add('hidden');
     if (tbody) {
@@ -452,6 +547,21 @@ function renderEvenements() {
           <td class="py-4 pl-4 pr-6 align-middle text-right">${actionBtns('evenements', ev.id)}</td>
         </tr>`).join('');
     }
+=======
+    tableWrap.classList.remove('hidden');
+    empty.classList.add('hidden');
+    tbody.innerHTML = list.map(ev => `
+      <tr class="hover:bg-slate-50/70 transition-colors">
+        <td class="px-5 py-3.5">
+          <span class="font-semibold text-slate-900">${esc(ev.titre)}</span>
+        </td>
+        <td class="px-5 py-3.5">${typeBadge(ev.type)}</td>
+        <td class="px-5 py-3.5 text-xs text-slate-600 whitespace-nowrap">${fmtDate(ev.date_debut)} → ${fmtDate(ev.date_fin)}</td>
+        <td class="px-5 py-3.5 text-xs text-slate-600">${esc(ev.lieu)}<span class="text-slate-400">, ${esc(ev.ville)}</span></td>
+        <td class="px-5 py-3.5">${statutEvBadge(ev.statut)}</td>
+        <td class="px-5 py-3.5">${actionBtns('evenements', ev.id)}</td>
+      </tr>`).join('');
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
   }
 }
 
@@ -462,15 +572,22 @@ function evFormHTML(ev = null) {
   return `
     <form id="entity-form" class="space-y-4" novalidate>
       <div>
+<<<<<<< HEAD
         <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
           Titre de l'événement <span class="text-rose-500">*</span>
         </label>
         <input name="titre" type="text" value="${v('titre')}" required maxlength="150" placeholder="Ex : Salon International du BTP 2026"
           class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition font-medium">
+=======
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Titre de l'événement <span class="text-rose-500">*</span></label>
+        <input name="titre" value="${v('titre')}" placeholder="Ex : Salon International des Technologies" maxlength="150" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
+<<<<<<< HEAD
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
             Type d'événement <span class="text-rose-500">*</span>
           </label>
@@ -484,6 +601,17 @@ function evFormHTML(ev = null) {
             Statut actuel <span class="text-rose-500">*</span>
           </label>
           <select name="statut" class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition font-medium">
+=======
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Type <span class="text-rose-500">*</span></label>
+          <select name="type" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+            <option value="salon" ${sel('type','salon')}>Salon</option>
+            <option value="foire" ${sel('type','foire')}>Foire</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Statut <span class="text-rose-500">*</span></label>
+          <select name="statut" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
             <option value="planifie" ${sel('statut','planifie')}>Planifié</option>
             <option value="en_cours" ${sel('statut','en_cours')}>En cours</option>
             <option value="termine"  ${sel('statut','termine')}>Terminé</option>
@@ -494,6 +622,7 @@ function evFormHTML(ev = null) {
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
+<<<<<<< HEAD
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
             Date d'ouverture <span class="text-rose-500">*</span>
           </label>
@@ -506,11 +635,22 @@ function evFormHTML(ev = null) {
           </label>
           <input name="date_fin" type="date" value="${v('date_fin')}" required
             class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition font-mono">
+=======
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début <span class="text-rose-500">*</span></label>
+          <input name="date_debut" type="date" value="${v('date_debut')}" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin <span class="text-rose-500">*</span></label>
+          <input name="date_fin" type="date" value="${v('date_fin')}" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
+<<<<<<< HEAD
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
             Lieu / Site <span class="text-rose-500">*</span>
           </label>
@@ -523,10 +663,21 @@ function evFormHTML(ev = null) {
           </label>
           <input name="ville" type="text" value="${v('ville')}" required maxlength="100" placeholder="Ex : Tanger"
             class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition font-medium">
+=======
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu <span class="text-rose-500">*</span></label>
+          <input name="lieu" value="${v('lieu')}" placeholder="Ex : Palais des Expositions" maxlength="150" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Ville <span class="text-rose-500">*</span></label>
+          <input name="ville" value="${v('ville')}" placeholder="Ex : Casablanca" maxlength="100" required
+            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
         </div>
       </div>
 
       <div>
+<<<<<<< HEAD
         <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
           Description &amp; Programme
         </label>
@@ -539,6 +690,15 @@ function evFormHTML(ev = null) {
           Annuler
         </button>
         <button type="submit" class="flex-1 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm hover:shadow active:scale-[0.98]">
+=======
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+        <textarea name="description" rows="3" placeholder="Informations complémentaires sur l'événement..."
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition resize-none">${v('description')}</textarea>
+      </div>
+      <div class="flex gap-2.5 pt-3 border-t border-slate-200">
+        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
           ${ev ? 'Enregistrer les modifications' : 'Créer l\'événement'}
         </button>
       </div>
@@ -548,6 +708,7 @@ function evFormHTML(ev = null) {
 function evDetailsHTML(ev) {
   return `
     <div class="space-y-4">
+<<<<<<< HEAD
       <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
         <div>
           <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">Fiche Événement</span>
@@ -557,6 +718,10 @@ function evDetailsHTML(ev) {
           ${statutEvBadge(ev.statut)}
           <span class="text-[11px] font-mono text-slate-400">ID #${ev.id}</span>
         </div>
+=======
+      <div class="flex items-center gap-2 pb-3 border-b border-slate-200">
+        ${typeBadge(ev.type)} ${statutEvBadge(ev.statut)}
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </div>
 
       <div class="grid grid-cols-2 gap-2.5">
@@ -588,6 +753,10 @@ function evDetailsHTML(ev) {
           Fermer
         </button>
       </div>
+<<<<<<< HEAD
+=======
+      ${ev.description ? detailBlock('Description', `<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">${esc(ev.description)}</p>`) : ''}
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
     </div>`;
 }
 
@@ -654,6 +823,7 @@ function renderSecteurs() {
     if (cardsWrap) cardsWrap.classList.add('hidden');
     if (empty) empty.classList.remove('hidden');
   } else {
+<<<<<<< HEAD
     if (empty) empty.classList.add('hidden');
 
     if (state.secViewMode === 'cards') {
@@ -719,11 +889,40 @@ function renderSecteurs() {
         `).join('');
       }
     }
+=======
+    tableWrap.classList.remove('hidden');
+    empty.classList.add('hidden');
+    tbody.innerHTML = list.map(sec => `
+      <tr class="hover:bg-slate-50/70 transition-colors">
+        <td class="px-5 py-3.5 text-center">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-base border border-slate-200">
+            ${esc(sec.icone || '🏷️')}
+          </span>
+        </td>
+        <td class="px-5 py-3.5">
+          <button onclick="showDetails('secteurs',${sec.id})" class="font-semibold text-slate-900 text-xs sm:text-sm hover:text-blue-600 transition text-left">
+            ${esc(sec.nom)}
+          </button>
+          <div class="text-[11px] text-slate-400 font-mono">ID: #${sec.id}</div>
+        </td>
+        <td class="px-5 py-3.5">
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
+            <span class="inline-block w-3 h-3 rounded-full border border-white shadow-xs" style="background:${esc(sec.couleur)}"></span>
+            <span class="font-mono text-[11px] text-slate-600 font-bold">${esc(sec.couleur)}</span>
+          </div>
+        </td>
+        <td class="px-5 py-3.5 text-xs text-slate-600 max-w-xs">
+          <p class="truncate">${esc(sec.description) || '<span class="text-slate-400 italic">Aucune description</span>'}</p>
+        </td>
+        <td class="px-5 py-3.5">${actionBtns('secteurs', sec.id)}</td>
+      </tr>`).join('');
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
   }
 }
 
 function secFormHTML(sec = null) {
   const v = f => esc(sec ? (sec[f] ?? '') : '');
+<<<<<<< HEAD
   const couleur = sec?.couleur ?? '#0f172a';
 
   return `
@@ -734,10 +933,20 @@ function secFormHTML(sec = null) {
         </label>
         <input name="nom" type="text" value="${v('nom')}" required maxlength="100" placeholder="Ex : Agroalimentaire &amp; Terroir"
           class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition font-medium">
+=======
+  const couleur = sec?.couleur ?? '#2563eb';
+  return `
+    <form id="entity-form" class="space-y-4" novalidate>
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Nom du secteur <span class="text-rose-500">*</span></label>
+        <input name="nom" value="${v('nom')}" placeholder="Ex : Agroalimentaire, Technologie..." maxlength="100" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
+<<<<<<< HEAD
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
             Icône / Émoji <span class="text-rose-500">*</span>
           </label>
@@ -755,11 +964,29 @@ function secFormHTML(sec = null) {
             <input name="couleur" id="couleur-input" type="text" value="${esc(couleur)}" required maxlength="7"
               oninput="try{document.getElementById('couleur-picker').value=this.value}catch(e){}"
               class="flex-1 px-3 py-2 text-xs font-mono font-bold bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition">
+=======
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Icône / Émoji <span class="text-rose-500">*</span></label>
+          <input name="icone" value="${v('icone')}" placeholder="Ex : 💻" maxlength="10" required
+            class="w-full px-3 py-2 text-xs sm:text-sm text-center border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Couleur <span class="text-rose-500">*</span></label>
+          <div class="flex items-center gap-2">
+            <input type="color" id="couleur-picker" value="${esc(couleur)}"
+              oninput="document.querySelector('[name=couleur]').value=this.value; document.getElementById('couleur-hex').textContent=this.value"
+              class="h-9 w-10 p-0.5 border border-slate-200 rounded-lg cursor-pointer bg-white">
+            <div class="flex-1">
+              <input name="couleur" value="${esc(couleur)}" placeholder="#2563eb" maxlength="7" required
+                oninput="try{document.getElementById('couleur-picker').value=this.value; document.getElementById('couleur-hex').textContent=this.value}catch(e){}"
+                class="w-full px-2 py-1.5 text-xs font-mono border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+            </div>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
           </div>
         </div>
       </div>
 
       <div>
+<<<<<<< HEAD
         <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
           Description des filières <span class="text-rose-500">*</span>
         </label>
@@ -773,6 +1000,16 @@ function secFormHTML(sec = null) {
         </button>
         <button type="submit" class="flex-1 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm hover:shadow active:scale-[0.98]">
           ${sec ? 'Enregistrer les modifications' : 'Créer le secteur'}
+=======
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Description <span class="text-rose-500">*</span></label>
+        <textarea name="description" rows="3" placeholder="Description des activités du secteur..." maxlength="1000" required
+          class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition resize-none">${v('description')}</textarea>
+      </div>
+      <div class="flex gap-2.5 pt-3 border-t border-slate-200">
+        <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs transition">
+          ${sec ? 'Enregistrer les modifications' : 'Ajouter le secteur'}
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
         </button>
       </div>
     </form>`;
@@ -781,6 +1018,7 @@ function secFormHTML(sec = null) {
 function secDetailsHTML(sec) {
   return `
     <div class="space-y-4">
+<<<<<<< HEAD
       <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
         <span class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl border border-slate-200/80 shadow-xs" style="background:${esc(sec.couleur)}15">
           ${esc(sec.icone)}
@@ -809,6 +1047,27 @@ function secDetailsHTML(sec) {
         <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition">
           Fermer
         </button>
+=======
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
+        <span class="text-3xl p-2 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
+          ${esc(sec.icone || '🏷️')}
+        </span>
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">${esc(sec.nom)}</h3>
+          <p class="text-[11px] text-slate-400 font-mono">Identifiant : #${sec.id}</p>
+        </div>
+      </div>
+      <div>
+        <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Couleur associée</span>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-5 rounded-md border border-slate-200 shadow-xs" style="background:${esc(sec.couleur)}"></span>
+          <code class="font-mono text-slate-700 font-semibold text-xs">${esc(sec.couleur)}</code>
+        </div>
+      </div>
+      <div>
+        <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Description</span>
+        <p class="text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs sm:text-sm leading-relaxed">${esc(sec.description) || '<span class="italic text-slate-400">Aucune description</span>'}</p>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </div>
     </div>`;
 }
@@ -905,6 +1164,7 @@ function deleteItem(entity, id) {
   );
 }
 
+<<<<<<< HEAD
 // ─── INITIALISATION ─────────────────────────────────────────────────────────
 document.querySelectorAll('.nav-tab').forEach(btn => {
   btn.addEventListener('click', () => navigateTo(btn.dataset.nav));
@@ -919,6 +1179,15 @@ if (dateNowText) {
     month: 'short',
     year: 'numeric'
   });
+=======
+// ─── DETAIL BLOCK HELPER ────────────────────────────────────────────────────
+function detailBlock(label, valueHTML) {
+  return `
+    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+      <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5">${label}</span>
+      <div class="text-xs sm:text-sm font-semibold text-slate-800">${valueHTML || '—'}</div>
+    </div>`;
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
 }
 
 // Démarrage sur la section des Événements

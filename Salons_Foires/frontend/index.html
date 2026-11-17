@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="fr" class="h-full bg-slate-900">
 <head>
   <meta charset="UTF-8">
@@ -15,6 +16,30 @@
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
+=======
+<html lang="fr" class="h-full bg-slate-50 antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salons &amp; Foires — Console d'Administration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+            },
+            boxShadow: {
+              'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 3px 0 rgba(0, 0, 0, 0.04)',
+              'elevated': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03)',
+              'modal': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+            }
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
           },
           colors: {
             onyx: {
@@ -46,6 +71,7 @@
             glow: '0 0 20px -5px rgba(16, 185, 129, 0.3)',
           }
         },
+<<<<<<< HEAD
       },
     };
   </script>
@@ -108,8 +134,68 @@
     <button id="sidebar-close-btn" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
+=======
+      };
+    </script>
+    <style>
+      body { font-family: 'Plus Jakarta Sans', sans-serif; }
+      [hidden] { display: none !important; }
+      .nav-tab.active {
+        background-color: #0f172a;
+        color: #ffffff;
+      }
+      .toast-enter { animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .toast-leave { animation: toastOut 0.2s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+      @keyframes toastIn { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes toastOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 bg-slate-50 selection:bg-slate-900 selection:text-white">
+
+<!-- Global Toast Notifications -->
+<div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none w-88 max-w-[calc(100vw-2rem)]"></div>
+
+<!-- Top Navigation Header -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-subtle">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 gap-4">
+      
+      <!-- Brand & Product Identity -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-xs">
+          <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+            <line x1="4" y1="22" x2="4" y2="15"></line>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm text-slate-900 tracking-tight">Salons &amp; Foires</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+              Admin
+            </span>
+          </div>
+          <span class="text-[11px] text-slate-500 font-medium hidden sm:block">Gestion des salons, foires et secteurs</span>
+        </div>
+      </div>
+
+      <!-- Segmented Navigation Pills -->
+      <nav class="flex items-center gap-1 p-1 bg-slate-100/90 rounded-lg border border-slate-200/70">
+        <button data-nav="evenements" class="nav-tab active px-3.5 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Événements
+        </button>
+        <button data-nav="secteurs" class="nav-tab px-3.5 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Secteurs d'activité
+        </button>
+      </nav>
+
+    </div>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
   </div>
 
+<<<<<<< HEAD
   <!-- Navigation Menu Links -->
   <div class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
     <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Modules Principaux</div>
@@ -195,10 +281,102 @@
       <button id="header-action-btn" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition shadow-sm hover:shadow active:scale-[0.98]">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         <span id="header-action-label">Nouveau</span>
+=======
+<!-- Main Container -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- ======== SECTION: ÉVÉNEMENTS ======== -->
+  <section id="section-evenements" class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Événements</h1>
+          <span id="ev-count" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            0
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">Gestion, planification et organisation des salons et foires.</p>
+      </div>
+      <button id="ev-add-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>Ajouter un événement</span>
+      </button>
+    </div>
+
+    <!-- Search & Filters Toolbar -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <div class="relative flex-1 max-w-md">
+        <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </span>
+        <input id="ev-search" type="search" placeholder="Rechercher par titre, lieu ou ville..."
+          class="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+      </div>
+      <select id="ev-filter-statut" class="px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+        <option value="">Tous les statuts</option>
+        <option value="planifie">Planifié</option>
+        <option value="en_cours">En cours</option>
+        <option value="termine">Terminé</option>
+        <option value="annule">Annulé</option>
+      </select>
+    </div>
+
+    <!-- Table Container -->
+    <div id="ev-table-wrap" class="bg-white rounded-xl border border-slate-200/80 shadow-subtle overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[720px]">
+          <thead>
+            <tr class="bg-slate-50/75 border-b border-slate-200/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              <th class="px-5 py-3.5">Titre</th>
+              <th class="px-5 py-3.5">Type</th>
+              <th class="px-5 py-3.5">Dates</th>
+              <th class="px-5 py-3.5">Lieu / Ville</th>
+              <th class="px-5 py-3.5">Statut</th>
+              <th class="px-5 py-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ev-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="ev-empty" class="hidden text-center py-16 px-4 border border-dashed border-slate-300 rounded-xl bg-white shadow-subtle">
+      <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center mb-3">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </div>
+      <h3 class="font-bold text-slate-800 text-sm mb-1">Aucun événement trouvé</h3>
+      <p class="text-slate-500 text-xs mb-5">Ajoutez votre premier salon ou foire pour commencer l'organisation.</p>
+      <button onclick="showForm('evenements',null)" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Ajouter un événement
+      </button>
+    </div>
+  </section>
+
+  <!-- ======== SECTION: SECTEURS ======== -->
+  <section id="section-secteurs" hidden class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Secteurs d'activité</h1>
+          <span id="sec-count" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            0
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">Classification et thématisation des stands et exposants.</p>
+      </div>
+      <button id="sec-add-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>Ajouter un secteur</span>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </button>
     </div>
   </header>
 
+<<<<<<< HEAD
   <!-- Scrollable Canvas Body -->
   <main class="flex-1 overflow-y-auto p-4 sm:p-8">
     <div class="max-w-7xl mx-auto space-y-6">
@@ -484,10 +662,21 @@
           <h2 id="modal-title" class="font-bold text-base sm:text-lg text-slate-900 tracking-tight leading-tight"></h2>
           <span class="text-[11px] font-medium text-slate-400">Formulaire interactif d'administration</span>
         </div>
+=======
+    <!-- Search Toolbar -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <div class="relative flex-1 max-w-md">
+        <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </span>
+        <input id="sec-search" type="search" placeholder="Rechercher par nom ou mot-clé..."
+          class="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 shadow-subtle transition">
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
       </div>
       <button id="modal-close" class="text-slate-400 hover:text-slate-700 transition w-8 h-8 flex items-center justify-center rounded-xl hover:bg-slate-200/60 text-xl font-bold">&times;</button>
     </div>
 
+<<<<<<< HEAD
     <!-- Modal Body -->
     <div id="modal-body" class="px-6 py-5 overflow-y-auto flex-1">
       <!-- Dynamic Form or Details Content -->
@@ -513,6 +702,64 @@
       <button id="delete-confirm" class="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold transition shadow-sm hover:shadow active:scale-[0.98]">
         Supprimer
       </button>
+=======
+    <!-- Table Container -->
+    <div id="sec-table-wrap" class="bg-white rounded-xl border border-slate-200/80 shadow-subtle overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[640px]">
+          <thead>
+            <tr class="bg-slate-50/75 border-b border-slate-200/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              <th class="px-5 py-3.5 w-16 text-center">Icône</th>
+              <th class="px-5 py-3.5">Nom du secteur</th>
+              <th class="px-5 py-3.5">Couleur</th>
+              <th class="px-5 py-3.5">Description</th>
+              <th class="px-5 py-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sec-table-body" class="divide-y divide-slate-100 text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="sec-empty" class="hidden text-center py-16 px-4 border border-dashed border-slate-300 rounded-xl bg-white shadow-subtle">
+      <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center mb-3">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+      </div>
+      <h3 class="font-bold text-slate-800 text-sm mb-1">Aucun secteur trouvé</h3>
+      <p class="text-slate-500 text-xs mb-5">Ajoutez votre premier secteur d'activité.</p>
+      <button onclick="showForm('secteurs',null)" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Ajouter un secteur
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======== MODAL: Generic (form + details) ======== -->
+<div id="modal-overlay" hidden class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+  <div id="modal-box" class="bg-white rounded-xl shadow-modal w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 bg-slate-50/50">
+      <h2 id="modal-title" class="font-bold text-base text-slate-900"></h2>
+      <button id="modal-close" class="text-slate-400 hover:text-slate-700 transition w-8 h-8 flex items-center justify-center rounded-md hover:bg-slate-100 text-lg">&times;</button>
+    </div>
+    <div id="modal-body" class="px-6 py-5 overflow-y-auto flex-1"></div>
+  </div>
+</div>
+
+<!-- ======== MODAL: Delete Confirm ======== -->
+<div id="delete-overlay" hidden class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+  <div class="bg-white rounded-xl shadow-modal w-full max-w-sm p-6 text-center border border-slate-200">
+    <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 mx-auto flex items-center justify-center mb-3">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    </div>
+    <h2 class="font-bold text-base text-slate-900 mb-1">Confirmer la suppression</h2>
+    <p id="delete-msg" class="text-slate-500 text-xs sm:text-sm mb-5 leading-relaxed"></p>
+    <div class="flex gap-2.5 justify-center">
+      <button id="delete-cancel" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold hover:bg-slate-50 transition">Annuler</button>
+      <button id="delete-confirm" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold transition shadow-xs">Supprimer</button>
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
     </div>
   </div>
 </div>

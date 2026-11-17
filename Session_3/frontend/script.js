@@ -39,11 +39,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         const isSuccess = type === 'success';
+<<<<<<< HEAD
         const bg = isSuccess ? 'bg-slate-900 border-emerald-500/40 text-white' : 'bg-slate-900 border-rose-500/40 text-white';
+=======
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
         const icon = isSuccess ? '✓' : '⚠️';
+        const bgStyle = isSuccess
+            ? 'background:#1a2a1a;color:#3fb950;border:1px solid #2ea043'
+            : 'background:#2a1a1a;color:#f85149;border:1px solid #da3633';
 
+<<<<<<< HEAD
         toast.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-modal border flex items-center gap-3 text-xs sm:text-sm font-semibold transition-all transform duration-200 toast-enter ${bg}`;
         toast.innerHTML = `<span class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${isSuccess ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${icon}</span><span class="flex-1 text-slate-100">${escapeHtml(message)}</span>`;
+=======
+        toast.setAttribute('style', bgStyle + ';border-radius:12px');
+        toast.className = `pointer-events-auto px-4 py-3 flex items-center gap-3 text-sm font-semibold transition-all transform duration-200`;
+        toast.innerHTML = `<span class="text-base font-bold">${icon}</span><span>${escapeHtml(message)}</span>`;
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
         container.appendChild(toast);
         setTimeout(() => {
             toast.classList.add('opacity-0', 'translate-x-2');
@@ -81,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             formTitle.textContent = 'Nouveau secteur';
             form.reset();
             secteurId.value = '';
-            couleur.value = '#4f46e5';
-            if (couleurHex) couleurHex.textContent = '#4f46e5';
+            couleur.value = '#58a6ff';
+            if (couleurHex) couleurHex.textContent = '#58a6ff';
         }
         form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         nom.focus();
@@ -101,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ---------- Rendu du Tableau Moderne ---------- */
+    /* ---------- Rendu du Tableau — Carbon Dark Pro ---------- */
 
     function renderSecteurs(secteurs) {
         const count = secteurs.length;
@@ -118,34 +130,34 @@ document.addEventListener('DOMContentLoaded', () => {
         let tableHtml = '';
         secteurs.forEach((s) => {
             tableHtml += `
-                <tr class="hover:bg-slate-50/80 transition-colors group">
+                <tr class="transition-colors cursor-default">
                     <!-- Icône -->
                     <td class="py-4 pl-6 pr-3 text-center align-middle w-16">
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-2xl border border-slate-200/60 shadow-xs group-hover:scale-105 transition-transform">
+                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#1c2128] text-2xl border border-[#30363d] shadow-xs group-hover:scale-105 transition-transform">
                             ${escapeHtml(s.icone)}
                         </span>
                     </td>
 
                     <!-- Nom -->
                     <td class="px-4 py-4 align-middle whitespace-nowrap">
-                        <button type="button" data-action="details" data-id="${s.id}" class="text-sm font-bold text-slate-900 hover:text-indigo-600 transition-colors text-left block">
+                        <button type="button" data-action="details" data-id="${s.id}" class="text-sm font-bold text-[#e6edf3] hover:text-[#58a6ff] transition-colors text-left block">
                             ${escapeHtml(s.nom)}
                         </button>
-                        <span class="text-xs text-slate-400 font-mono font-medium">#${s.id}</span>
+                        <span class="text-xs text-[#8b949e] font-mono font-medium">#${s.id}</span>
                     </td>
 
                     <!-- Couleur -->
                     <td class="px-4 py-4 align-middle whitespace-nowrap">
-                        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80">
-                            <span class="inline-block w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background:${escapeHtml(s.couleur)}"></span>
-                            <span class="font-mono text-xs text-slate-700 font-bold">${escapeHtml(s.couleur)}</span>
+                        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#1c2128] border border-[#30363d]">
+                            <span class="inline-block w-3.5 h-3.5 rounded-full border border-[#30363d]" style="background:${escapeHtml(s.couleur)}"></span>
+                            <span class="font-mono text-xs text-[#e6edf3] font-bold">${escapeHtml(s.couleur)}</span>
                         </div>
                     </td>
 
                     <!-- Description -->
-                    <td class="px-4 py-4 align-middle text-sm text-slate-600 min-w-[260px]">
-                        <p class="leading-relaxed break-words m-0 text-slate-600 text-sm">
-                            ${escapeHtml(s.description) || '<span class="text-slate-400 italic font-normal">Aucune description</span>'}
+                    <td class="px-4 py-4 align-middle text-sm text-[#8b949e] min-w-[260px]">
+                        <p class="leading-relaxed break-words m-0 text-[#8b949e] text-sm">
+                            ${escapeHtml(s.description) || '<span class="text-[#8b949e] italic font-normal">Aucune description</span>'}
                         </p>
                     </td>
 
@@ -153,17 +165,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td class="py-4 pl-3 pr-6 text-right align-middle whitespace-nowrap">
                         <div class="inline-flex items-center justify-end gap-1.5">
                             <button data-action="details" data-id="${s.id}" type="button" 
+<<<<<<< HEAD
                                 class="w-8 h-8 rounded-lg border border-slate-200/80 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-900 inline-flex items-center justify-center transition shadow-xs"
+=======
+                                class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#1c2128] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] transition-colors"
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
                                 title="Consulter les détails">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             </button>
                             <button data-action="edit" data-id="${s.id}" type="button" 
+<<<<<<< HEAD
                                 class="w-8 h-8 rounded-lg border border-slate-200/80 bg-white hover:bg-slate-50 text-slate-500 hover:text-amber-600 inline-flex items-center justify-center transition shadow-xs"
+=======
+                                class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#1c2a1c] hover:bg-[#2ea043] text-[#3fb950] hover:text-white transition-colors"
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
                                 title="Modifier ce secteur">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                             </button>
                             <button data-action="delete" data-id="${s.id}" type="button" 
+<<<<<<< HEAD
                                 class="w-8 h-8 rounded-lg border border-slate-200/80 bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 inline-flex items-center justify-center transition shadow-xs"
+=======
+                                class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2a1a1a] hover:bg-[#da3633] text-[#f85149] hover:text-white transition-colors"
+>>>>>>> 5e67d3d668c6bbdd946acce5f6aeab4fe2dc80ec
                                 title="Supprimer ce secteur">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </button>
