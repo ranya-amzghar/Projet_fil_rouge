@@ -10,24 +10,6 @@ classDiagram
         -varchar lieu
         -varchar ville
         -varchar status
-        setId_evenement(): void
-        getId_evenement(): int
-        setNom_evenement(): void
-        getNom_evenement(): string
-        setType_evenement(): void
-        getType_evenement(): string
-        setDescription_evenement(): void
-        getDescription_evenement(): string
-        setDate_debut(): void
-        getDate_debut(): date
-        setDate_fin(): void
-        getDate_fin(): date
-        setLieu(): void
-        getLieu(): string
-        setVille(): void
-        getVille(): string
-        setStatus(): void
-        getStatus(): string
     }
     class Stand{
         -int id_stand
@@ -35,16 +17,6 @@ classDiagram
         -text superficie
         -int prix
         -varchar statut
-        setId_stand(): void
-        getId_stand(): int
-        setNmb_stand(): void
-        getNmb_stand(): int
-        setsuperficie_stand(): void
-        getsuperficie_stand(): string
-        setPrix_stand(): void
-        getPrix_stand(): int
-        setstatut_stand(): void
-        getstatus_stand(): string
     }
     class Exposant{
         -int id_exposant
@@ -52,27 +24,11 @@ classDiagram
         -varchar email
         -int telephone
         -varchar site_web
-        setId_exposant(): void
-        getId_exposant(): int
-        setRaison_sociale(): void
-        getRaison_sociale(): varchar
-        setemail(): void
-        getemail(): string
-        setTelephone(): void
-        getTelephone(): int
-        setSite_web(): void
-        getSite_web(): string
     }
     class Secteur_activité{
         -int id_secteur
         -varchar nom
         -varchar description
-        getId_Secteur(): int
-        setId_Secteur(): void
-        getNom(): string
-        setNom(): void
-        getDescription(): string
-        setDescription(): void
     }
     Evenement -- Stand : contient
     Stand -- Exposant: réserver
